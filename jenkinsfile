@@ -1,5 +1,9 @@
 pipeline{
     agent:any
+
+      environment {
+        DOCKER_IMAGE = 'dhinakarandk/sample23'
+    }
     stages{
         stage('pull code'){
             steps{
@@ -9,14 +13,23 @@ pipeline{
         }
         stage('Build Docker image'){
             step{
-                echo 'Building the image'
+                script{
+                    docker.build("${DOCKER_IMAGE}")
+                }
+                echo 'image created'
             }
         }
         stage('push to docker hub'){
             step{
-                echo 'pushing Docker image to docker hub'
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
+                        docker.image("${DOCKER_IMAGE}").push()
+                    }
+                
             }
         }
 
+    }
+    
     }
 }
