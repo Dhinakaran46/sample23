@@ -11,6 +11,12 @@ pipeline{
                 checkout scm
             }
         }
+        stage('Check Docker') {
+           steps {
+             bat 'docker context ls'
+              bat 'docker info'
+            }
+        }
         stage('Build Docker image'){
             steps {
                 script {
